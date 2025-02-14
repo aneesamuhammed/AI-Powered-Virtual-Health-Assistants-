@@ -1,2 +1,6 @@
 # AI-Powered-Virtual-Health-Assistants-
 Enhancing AI-Powered Virtual Health Assistants with Simulated Wearable Vitals Monitoring for Real-Time Health Insights
+This investigation examines the effectiveness of adding simulated wearable health information into artificial intelligence assisted virtual assistants for real-time health tracking and tailored recommendations. The study explores machine learning model behaviour when analysing simulated vitals data such as heart rate and oxygen levels and activities and sleep quality for improving virtual assistant decision outcomes. This study will assess the effects that immediate data observation has on early health indicator identification along with proactive disease prevention systems.
+The project expands the Virtual Health Assistant of DeleMike on GitHub (https://github.com/DeleMike/Virtual-Health-Assistant) through the implementation of simulated wearable vitals monitoring software. The modified tool will deliver immediate health information and spot health irregularities and customized guidance using dataset patterns that resemble wearable technology outputs.
+The combination of algorithm comparison and user interaction trend assessment will advance knowledge about AI-assisted healthcare solutions for the broader field.
+
