@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            width: 45%;
+            text-align: center;
+        }
+        #diseasePieChart {
+            width: 90% !important;
+        }
+        .results-container {
+            width: 45%;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            resize: vertical;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results p {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+        .vitals {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f7f7f7;
+            border-radius: 4px;
+        }
+        .vitals p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .vitals i {
+            margin-right: 10px;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Symptom Prediction</h1>
+
+    <div class="container">
+        <div class="chart-container">
+            <canvas id="diseasePieChart" width="500" height="500"></canvas>
+        </div>
+
+        <div class="results-container">
+            <form id="symptom-form">
+                <textarea id="symptoms" rows="6" placeholder="Enter symptoms separated by commas..."></textarea><br>
+                <button type="submit">Predict Diseases</button>
+            </form>
+
+            <div class="results" id="predictions"></div>
+            <div class="vitals" id="vitals"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('symptom-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const symptoms = document.getElementById('symptoms').value;
+
+            // Clear previous results
+            document.getElementById('predictions').innerHTML = '';
+            document.getElementById('vitals').innerHTML = '';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ symptoms: symptoms })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Request failed');
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Display predictions
+                const predictionsDiv = document.getElementById('predictions');
+                predictionsDiv.innerHTML = '<h2>Top 5 Predicted Diseases:</h2>';
+                createPieChart(data.predictions);
+                data.predictions.slice(0, 5).forEach(prediction => {
+                    const p = document.createElement('p');
+                    p.textContent = `${prediction.disease}: ${prediction.probability}%`;
+                    predictionsDiv.appendChild(p);
+                });
+
+                // Display vitals with icons
+                const vitalsDiv = document.getElementById('vitals');
+                vitalsDiv.innerHTML = '<h3>Vitals:</h3>';
+                for (const [key, value] of Object.entries(data.vitals)) {
+                    const p = document.createElement('p');
+                    let icon;
+                    switch(key.toLowerCase()) {
+                        case 'heart rate':
+                            icon = '<i class="fas fa-heart"></i>';
+                            break;
+                        case 'blood pressure':
+                            icon = '<i class="fas fa-tint"></i>';
+                            break;
+                        case 'temperature':
+                            icon = '<i class="fas fa-thermometer-half"></i>';
+                            break;
+                        default:
+                            icon = '<i class="fas fa-stethoscope"></i>';
+                    }
+                    p.innerHTML = `${icon} ${key}: ${value.toFixed(2)}`;
+                    vitalsDiv.appendChild(p);
+                }
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        let pieChart = null;  // 🆕 Global chart instance
+
+        function createPieChart(predictions) {
+            const ctx = document.getElementById('diseasePieChart').getContext('2d');
+            const labels = predictions.map(p => p.disease);
+            const probabilities = predictions.map(p => p.probability);
+
+            // 🧨 Destroy the existing chart before creating a new one
+            if (pieChart !== null) {
+                pieChart.destroy();
+            }
+
+            pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: probabilities,
+                        backgroundColor: ['#FF9999', '#66B3FF', '#99FF99', '#FFCC99', '#FF6666'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+
+</body>
+</html>
