@@ -1,0 +1,51 @@
+[
+  {
+    "question": "I have fatigue, weight gain, cold hands and feet, mood swings, lethargy, dizziness, puffy face and eyes, enlarged thyroid, brittle nails, swollen extremities, depression, irritability, abnormal menstruation, memory problems, hair thinning, dry skin, constipation, muscle weakness, joint pain, hoarseness, slow heart rate, sensitivity to cold, slow metabolism, heavy periods, swelling in joints, thinning eyebrows, trouble concentrating, brittle hair, could this be hypothyroidism?",
+    "tags": ["hypothyroidism"]
+  },
+  {
+    "question": "I have frequent urination, excessive thirst, unexplained weight loss, fatigue, blurred vision, slow healing wounds, numbness in extremities, increased hunger, dry mouth, yeast infections, irritability, tingling feet, skin infections, extreme tiredness, sugar cravings, headaches, dizziness, dehydration, muscle cramps, sweating, slow wound healing, nausea, vomiting, frequent infections, dark patches on skin, fruity-smelling breath, could this be diabetes?",
+    "tags": ["diabetes"]
+  },
+  {
+    "question": "I have fever, cough, sore throat, runny nose, muscle aches, chills, fatigue, headache, nasal congestion, sneezing, chest discomfort, watery eyes, swollen lymph nodes, ear pain, mild wheezing, shortness of breath, body aches, loss of appetite, sore muscles, shivering, excessive sweating, dizziness, nausea, vomiting, diarrhea, rapid heart rate, could this be flu?",
+    "tags": ["flu"]
+  },
+  {
+    "question": "I experience high blood pressure, headache, dizziness, chest pain, shortness of breath, blurred vision, nosebleeds, fatigue, nausea, confusion, ringing in ears, irregular heartbeat, sweating, difficulty sleeping, swollen ankles, anxiety, pounding in chest, weakness, difficulty concentrating, facial flushing, vision changes, trouble breathing, pain in back, lightheadedness, could this be hypertension?",
+    "tags": ["hypertension"]
+  },
+  {
+    "question": "I have chest pain, shortness of breath, dizziness, nausea, fatigue, cold sweats, pain in arms or jaw, irregular heartbeat, anxiety, lightheadedness, fainting, indigestion, back pain, vomiting, extreme tiredness, clammy skin, palpitations, feeling weak, sudden sweating, feeling of doom, stomach discomfort, difficulty breathing, could this be heart attack?",
+    "tags": ["heart attack"]
+  },
+  {
+    "question": "I have persistent cough, chest tightness, wheezing, shortness of breath, difficulty breathing at night, frequent respiratory infections, dry cough, anxiety, blue lips or fingers, difficulty exhaling, fatigue, throat irritation, nasal congestion, sore throat, headaches, increased mucus production, coughing up phlegm, nasal drip, sensitivity to smoke, trouble sleeping, could this be asthma?",
+    "tags": ["asthma"]
+  },
+  {
+    "question": "I have joint pain, stiffness, swelling, fatigue, redness around joints, decreased range of motion, morning stiffness, difficulty gripping, joint deformities, joint tenderness, cracking sounds, muscle weakness, warmth in joints, back pain, foot pain, knee swelling, difficulty walking, stiffness after sitting, could this be arthritis?",
+    "tags": ["arthritis"]
+  },
+  {
+    "question": "I have stomach pain, bloating, nausea, vomiting, diarrhea, heartburn, loss of appetite, unexplained weight loss, fatigue, stomach cramps, black stools, bad breath, belching, acid reflux, discomfort after eating, fullness in stomach, burning sensation in stomach, chest discomfort, nausea after eating, could this be gastritis?",
+    "tags": ["gastritis"]
+  },
+  {
+    "question": "I have skin redness, itching, dry skin, peeling, inflammation, burning sensation, cracked skin, rash, blisters, skin thickening, flaky skin, small bumps, sensitivity to soaps, scaly patches, pain in affected areas, fluid-filled bumps, skin irritation, infection risk, worsened with scratching, could this be eczema?",
+    "tags": ["eczema"]
+  },
+  {
+    "question": "I have severe headaches, nausea, sensitivity to light, visual disturbances, dizziness, neck stiffness, vomiting, lightheadedness, throbbing pain on one side, irritability, fatigue, difficulty concentrating, blurred vision, tingling in face, speech difficulties, difficulty focusing, aura before headaches, confusion, sweating, could this be migraine?",
+    "tags": ["migraine"]
+  },
+  {
+    "question": "I have excessive sweating, rapid heartbeat, nervousness, weight loss, increased appetite, heat intolerance, frequent bowel movements, irritability, tremors, difficulty sleeping, fatigue, muscle weakness, brittle hair, excessive thirst, hair thinning, frequent mood swings, anxiety, light sensitivity, could this be hyperthyroidism?",
+    "tags": ["hyperthyroidism"]
+  },
+  {
+    "question": "I have swelling in the legs, fatigue, difficulty breathing, rapid heartbeat, chest pain, dizziness, frequent urination at night, bloating, weight gain, nausea, irregular heartbeat, fainting, confusion, persistent coughing, swollen abdomen, lack of appetite, shortness of breath while lying down, could this be heart failure?",
+    "tags": ["heart failure"]
+  }
+]
+

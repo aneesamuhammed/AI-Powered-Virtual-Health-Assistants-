@@ -1,86 +1,62 @@
-from tensorflow.keras.models import load_model
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-import pickle
+from flask import Flask, render_template, request, jsonify
 import numpy as np
-import nltk
-from nltk import LancasterStemmer
-
-from nltk import WordNetLemmatizer  # Add this import
-lemmatizer = WordNetLemmatizer()  # Initialize lemmatizer
-
-import pandas as pd
-
-stemmer = LancasterStemmer()
+import tensorflow as tf
+import pickle
+from vitals_generator import generate_vitals
 
 app = Flask(__name__)
-CORS(app)
 
-model = load_model("chatbot_model.hdf5")
-
-with open('labels.pkl', 'rb') as f:
-    labels = pickle.load(f)
-
-with open('words.pkl', 'rb') as f:
-    words = pickle.load(f)
+# Load trained model and data
+model = tf.keras.models.load_model("chatbot_model.hdf5")
+words = pickle.load(open("words.pkl", "rb"))
+labels = pickle.load(open("labels.pkl", "rb"))
 
 
-def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]  # ✅ CORRECT
-    return sentence_words
-
-
-def bow(sentence, words, show_details=True):
-    sentence_words = clean_up_sentence(sentence)
-    bag = [0]*len(words)
-    for s in sentence_words:
-        for i,w in enumerate(words):
-            if w == s:
-                bag[i] = 1
-                if show_details:
-                    print ("found in bag: %s" % w)
-
-    return(np.array(bag))
+def preprocess_input(symptoms):
+    symptoms = symptoms.lower().split(", ")  # Convert to list
+    bag = [1 if w in symptoms else 0 for w in words]
+    return np.array([bag])
 
 @app.route('/')
-def home_endpoint():
-    return 'Hello there, welcome to Team Medic Minds'
+def home():
+    return render_template('index.html')  # Serve the index.html template
 
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.get_json()
 
-@app.route('/api/predict', methods=['GET', 'POST'])
-def classify():
-    ERROR_THRESHOLD = 0.25
+    if not data or 'symptoms' not in data:
+        return jsonify({"error": "No symptoms provided"}), 400
 
-    sentence = request.json['sentence']
-    input_data = pd.DataFrame([bow(sentence, words)], dtype=float, index=['input']).to_numpy()
-    results = model.predict([input_data])[0]
-    results = [[i, r] for i, r in enumerate(results) if r > ERROR_THRESHOLD]
-    results.sort(key=lambda x: x[1], reverse=True)
-    return_list = []
-    for r in results:
-        return_list.append({"intent": labels[r[0]], "probability": str(r[1])})
+    symptoms = data["symptoms"]
+    vitals_raw = generate_vitals()  # Always generate vitals, not used in prediction
 
-    response = jsonify(return_list)
-    return response
+    # Convert all vitals to regular Python float
+    vitals = {k: float(v) for k, v in vitals_raw.items()}
 
-if __name__ == '__main__':
+    # Preprocess symptoms
+    input_data = preprocess_input(symptoms)
 
-    app.run(host='0.0.0.0', port=5000)
+    # Model prediction
+    predictions = model.predict(input_data)[0]
 
+    # Get top 5 indices (adjust as needed)
+    top_indices = np.argsort(predictions)[::-1][:5]
+    top_predictions = [predictions[i] for i in top_indices]
 
-'''
-def get_prediction():
-    sentence = request.json['sentence']
-    
-    if flask.request.method == 'POST':
-        data = flask.request.json  # Get data posted as a json
-        if data == None:
-            data = flask.request.args
+    # Normalize top probabilities to sum to 100%
+    total = sum(top_predictions)
+    normalized = [p / total for p in top_predictions]
 
-        input = data.get('data')
-        prediction = predictStringInput(chatbot_model,input)
+    results = [
+        {
+            "disease": labels[top_indices[i]],
+            "probability": round(float(normalized[i]) * 100, 1)  # Ensure JSON serializable
+        }
+        for i in range(len(top_indices))
+    ]
 
-    return prediction
+    return jsonify({"predictions": results, "vitals": vitals})
 
-'''
+if __name__ == "__main__":
+    app.run(debug=True)
